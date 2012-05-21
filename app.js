@@ -28,8 +28,9 @@ if (cluster.isMaster) {
     }
 }
 else {
-    app.listen(3333)
-    console.log("Listening on 3333")
+    var PORT = process.env.PORT || 3333
+    app.listen(PORT)
+    console.log("Listening on " + PORT)
 }
 
 
