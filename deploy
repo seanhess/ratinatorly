@@ -1,0 +1,21 @@
+#!/bin/bash 
+
+echo "DEPLOY"
+ssh -t node@ratinator.ly <<REMOTE
+cd ratinatorly 
+
+# checkout
+echo 'Checking out code'
+git fetch
+git reset --hard origin/master 
+
+# install deps
+echo 'Installing'
+npm install
+
+# start the server
+echo 'Restarting'
+sudo stop ratinatorly
+sudo start ratinatorly
+
+REMOTE

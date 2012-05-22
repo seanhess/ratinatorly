@@ -2,7 +2,6 @@ var express = require('express')
 var app = express.createServer()
 
 app.get('/', function(req, res) {
-    res.header('Cache-Control', "max-age=3600, must-revalidate")
     console.log("Hello World!")
     res.send("Hello World!")
 })
@@ -17,45 +16,22 @@ app.get('/users/:username/email', function(req, res) {
 })
 
 // NORMAL START
-// app.listen(3333)
-// console.log("Listening on 3333")
-
-// CLUSTER!
-var os = require('os')
-var cluster = require('cluster')
-if (cluster.isMaster) {
-
-    for (var i = 0; i < os.cpus().length; i++) {
-        cluster.fork()
-    }
-}
-else {
-    var PORT = process.env.PORT || 3333
-    app.listen(PORT)
-    console.log("Listening on " + PORT)
-}
-
-
-
-
-
+app.listen(3333)
+console.log("Listening on 3333")
 
 
 // FAKE USERS MODULE
 var users = {}
 
 var FakeUsers = {
-     "seanhess": {"email":"seanhess@hotmail.com"}
+       "seanhess": {"email":"seanhess@hotmail.com"}
 }
 
 // fake database call
 users.getUser = function(username, cb) {
-      process.nextTick(function() {
-          cb(null, FakeUsers[username])
-      })
+        process.nextTick(function() {
+                    cb(null, FakeUsers[username])
+                })
 }
-
-
-
 
 
