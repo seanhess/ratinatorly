@@ -2,9 +2,6 @@
   "author": "sean",
   "name": "ratinatorly",
   "version": "0.0.0",
-  "repository": {
-    "url": ""
-  },
   "dependencies": {
     "express":"2.5.9"
   },
