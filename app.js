@@ -6,5 +6,6 @@ app.get('/', function(req, res) {
     res.send("Hello World!")
 })
 
-app.listen(3333)
-console.log("Listening on 3333")
+var PORT = process.env.PORT || 3333
+app.listen(PORT)
+console.log("Listening on " + PORT)
