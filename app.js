@@ -1,5 +1,6 @@
 var express = require('express')
 var app = express.createServer()
+var users = require('./users')
 
 app.get('/', function(req, res) {
     res.header('Cache-Control', "max-age=3600, must-revalidate")
@@ -12,6 +13,7 @@ app.get('/users/:username/email', function(req, res) {
     var username = req.param('username')
     users.getUser(username, function(err, user) {
         if (err) return res.send({error:err.message}, 500)
+        // if (!user) return res.send({error:"Not found"}, 404)
         res.send({email:user.email})
     })
 })
@@ -20,11 +22,29 @@ app.get('/users/:username/email', function(req, res) {
 // app.listen(3333)
 // console.log("Listening on 3333")
 
+// RUN AS ROOT
+var PORT = process.env.PORT || 3333
+app.listen(PORT)
+console.log("Listening on " + PORT)
+
+
+process.on("uncaughtException", 
+  function(err) {
+  // maybe email it or something
+  console.log(err.stack)
+})
+
+
+return
+
+
+
+
+
 // CLUSTER!
 var os = require('os')
 var cluster = require('cluster')
 if (cluster.isMaster) {
-
     for (var i = 0; i < os.cpus().length; i++) {
         cluster.fork()
     }
@@ -33,26 +53,6 @@ else {
     var PORT = process.env.PORT || 3333
     app.listen(PORT)
     console.log("Listening on " + PORT)
-}
-
-
-
-
-
-
-
-// FAKE USERS MODULE
-var users = {}
-
-var FakeUsers = {
-     "seanhess": {"email":"seanhess@hotmail.com"}
-}
-
-// fake database call
-users.getUser = function(username, cb) {
-      process.nextTick(function() {
-          cb(null, FakeUsers[username])
-      })
 }
 
 
