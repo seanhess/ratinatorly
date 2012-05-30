@@ -1,0 +1,16 @@
+{
+  "author": "sean",
+  "name": "ratinatorly",
+  "version": "0.0.0",
+  "repository": {
+    "url": ""
+  },
+  "dependencies": {
+    "express":"2.5.9"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {},
+  "engines": {
+    "node": "0.6.x"
+  }
+}
