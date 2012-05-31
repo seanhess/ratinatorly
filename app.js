@@ -3,6 +3,7 @@ var app = express.createServer()
 var users = require('./users')
 
 app.get('/', function(req, res) {
+    res.header('Cache-Control', "max-age=3600, must-revalidate")
     console.log("Hello World!")
     res.send("Hello World!")
 })
@@ -12,7 +13,7 @@ app.get('/users/:username/email', function(req, res) {
     var username = req.param('username')
     users.getUser(username, function(err, user) {
         if (err) return res.send({error:err.message}, 500)
-        // if (!user) return res.send({error:"Not found"}, 404)
+        if (!user) return res.send({error:"Not found"}, 404)
         res.send({email:user.email})
     })
 })
@@ -23,6 +24,17 @@ process.on("uncaughtException",
   console.log(err.stack)
 })
 
-var PORT = process.env.PORT || 3333
-app.listen(PORT)
-console.log("Listening on " + PORT)
+// CLUSTER!
+var os = require('os')
+var cluster = require('cluster')
+if (cluster.isMaster) {
+    for (var i = 0; i < os.cpus().length; i++) {
+        cluster.fork()
+    }
+}
+else {
+    var PORT = process.env.PORT || 3333
+    app.listen(PORT)
+    console.log("Listening on " + PORT)
+}
+
