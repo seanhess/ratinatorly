@@ -12,8 +12,15 @@ app.get('/users/:username/email', function(req, res) {
     var username = req.param('username')
     users.getUser(username, function(err, user) {
         if (err) return res.send({error:err.message}, 500)
+        // if (!user) return res.send({error:"Not found"}, 404)
         res.send({email:user.email})
     })
+})
+
+process.on("uncaughtException", 
+  function(err) {
+  // maybe email it or something
+  console.log(err.stack)
 })
 
 var PORT = process.env.PORT || 3333
